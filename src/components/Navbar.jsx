@@ -81,17 +81,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Announcement bar ── */}
-      <div className={styles.announcement}>
-        <p
-          className="label-caps"
-          style={{ fontSize: 10, color: "var(--ivory)", opacity: 0.9 }}
-        >
-          ✦ Free delivery on orders above ₹999 &nbsp;·&nbsp; Use code SVSFIRST
-          for 10% off ✦
-        </p>
-      </div>
-
       {/* ── Main Navbar ── */}
       <motion.header
         className={`${styles.navbar} ${scrolled ? styles.scrolled : ""} ${isHome && !scrolled ? styles.transparent : ""}`}
