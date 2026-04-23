@@ -1,0 +1,217 @@
+/* src/pages/Auth.module.css */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── Left panel ── */
+.left {
+  background: var(--charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.left::before {
+  content: '';
+  position: absolute;
+  top: -30%; left: -20%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,151,58,0.08) 0%, transparent 70%);
+}
+
+.left::after {
+  content: '';
+  position: absolute;
+  bottom: 10%; right: -10%;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,151,58,0.12);
+}
+
+.leftContent {
+  position: relative;
+  z-index: 1;
+  max-width: 380px;
+}
+
+.leftTitle {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 300;
+  color: var(--ivory);
+  line-height: 1.1;
+  margin-bottom: var(--space-lg);
+}
+.leftTitle em { color: var(--gold); font-style: italic; }
+
+.leftSub {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--sand);
+  line-height: 1.7;
+}
+
+.leftDecor {
+  margin-top: var(--space-2xl);
+}
+
+/* ── Right panel ── */
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ivory);
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.brandLink { text-decoration: none; }
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--maroon);
+  letter-spacing: 0.04em;
+}
+
+.cardHead { }
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.cardSub {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.field { display: flex; flex-direction: column; }
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.inputPadded      { padding-left: 42px !important; }
+.inputPaddedRight { padding-right: 42px !important; }
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.eyeBtn:hover { color: var(--text-mid); }
+
+.submitBtn {
+  width: 100%;
+  justify-content: center;
+  margin-top: var(--space-sm);
+  padding: 14px !important;
+  font-size: 12px !important;
+  letter-spacing: 0.16em !important;
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--text-light);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--beige);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.footerLink {
+  color: var(--maroon);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footerLink:hover { color: var(--maroon-deep); }
+
+/* ── OTP inputs ── */
+.otpInputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.otpInput {
+  width: 50px;
+  height: 56px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  background: var(--white);
+  border: 1px solid var(--beige);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.otpInput:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,151,58,0.12);
+}
+
+@media (max-width: 768px) {
+  .page { grid-template-columns: 1fr; }
+  .left { display: none; }
+  .right { padding: var(--space-xl) var(--space-md); align-items: flex-start; padding-top: 100px; }
+}
