@@ -20,7 +20,7 @@ const BANNERS = [
   {
     id: 1,
     eyebrow: 'New Arrivals',
-    title: 'Kanjivaram\nSilk Sarees',
+    title: 'Pure\nSilk Sarees',
     subtitle: 'Woven with centuries of tradition',
     cta: 'Explore Collection',
     link: '/category/clothing/sarees',
