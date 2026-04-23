@@ -1,0 +1,23 @@
+<svg width="220" height="80" viewBox="0 0 220 80" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Background -->
+  <rect width="220" height="80" rx="12" fill="#ffffff"></rect>
+
+  <!-- Decorative Circle -->
+  <circle cx="40" cy="40" r="28" stroke="#C59D5F" stroke-width="2"></circle>
+
+  <!-- Flower Icon -->
+  <path d="M40 28C42 34 48 36 48 40C48 44 42 46 40 52C38 46 32 44 32 40C32 36 38 34 40 28Z" fill="#B23A48"></path>
+
+  <!-- Lamp (Pooja symbol) -->
+  <path d="M150 30C152 36 158 38 158 42C158 46 152 48 150 54C148 48 142 46 142 42C142 38 148 36 150 30Z" fill="#C59D5F"></path>
+
+  <!-- SVS Text -->
+  <text x="75" y="48" font-family="Georgia, serif" font-size="32" fill="#5A0F2E" font-weight="bold">
+    SVS
+  </text>
+
+  <!-- Tagline -->
+  <text x="75" y="65" font-family="Arial, sans-serif" font-size="10" fill="#777">
+    Fashion • Jewelry • Flowers • Pooja
+  </text>
+</svg>
