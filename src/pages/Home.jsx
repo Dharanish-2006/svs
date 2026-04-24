@@ -203,7 +203,7 @@ export default function Home() {
         <div className={styles.marquee}>
           {[...Array(3)].map((_, i) => (
             <span key={i} className={styles.marqueeInner}>
-              ✦ Kanjivaram Sarees &nbsp;·&nbsp; Temple Jewelry &nbsp;·&nbsp; Fresh Flowers &nbsp;·&nbsp;
+              ✦ Pure silk Sarees &nbsp;·&nbsp; Temple Jewelry &nbsp;·&nbsp; Fresh Flowers &nbsp;·&nbsp;
               Pooja Kits &nbsp;·&nbsp; Silk Dupattas &nbsp;·&nbsp; Gold Bangles &nbsp;
             </span>
           ))}
@@ -225,7 +225,6 @@ export default function Home() {
                 style={{ '--cat-delay': `${i * 0.1}s` }}>
                 <div className={styles.catIcon}>{cat.icon}</div>
                 <h3 className={styles.catName}>{cat.label}</h3>
-                <p className={styles.catNameTa}>{cat.labelTa}</p>
                 <p className={styles.catDesc}>{cat.description}</p>
                 <span className={styles.catArrow}>
                   Browse <ArrowRight size={14} />

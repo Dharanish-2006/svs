@@ -2,7 +2,6 @@ export const CATEGORIES = [
   {
     id: 'clothing',
     label: 'Clothing',
-    labelTa: 'ஆடைகள்',
     icon: '👘',
     description: 'Traditional & contemporary Indian wear',
     subcategories: [
@@ -31,7 +30,6 @@ export const CATEGORIES = [
   {
     id: 'jewelry',
     label: 'Fashion Jewelry',
-    labelTa: 'நகைகள்',
     icon: '💍',
     description: 'Handcrafted ornaments & accessories',
     subcategories: [
@@ -50,7 +48,6 @@ export const CATEGORIES = [
   {
     id: 'flowers',
     label: 'Flowers',
-    labelTa: 'மலர்கள்',
     icon: '🌸',
     description: 'Fresh blooms for every occasion',
     subcategories: [
@@ -69,7 +66,6 @@ export const CATEGORIES = [
   {
     id: 'pooja',
     label: 'Pooja Items',
-    labelTa: 'பூஜை பொருட்கள்',
     icon: '🪔',
     description: 'Sacred essentials for daily rituals',
     subcategories: [
