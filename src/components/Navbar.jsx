@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.jpg";
 import {
   motion,
   AnimatePresence,
@@ -91,6 +92,10 @@ export default function Navbar() {
         <div className={styles.navInner}>
           {/* Left — nav links (desktop) */}
           <nav className={styles.navLeft}>
+            <Link to="/" className={styles.logo}>
+              <img src={logo} alt="SVS Collection" className={styles.logoImg} />
+            </Link>
+
             {CATEGORIES.map((cat) => (
               <div
                 key={cat.id}
@@ -113,13 +118,10 @@ export default function Navbar() {
           </nav>
 
           {/* Center — Logo */}
-          <Link to="/" className={styles.logo}>
+          {/* <Link to="/" className={styles.logo}>
             <div className={styles.logoInner}>
-              <span className={styles.logoSvs}>SVS</span>
-              <span className={styles.logoCollection}>Collection</span>
             </div>
-            <div className={styles.logoSubtitle}>Est. Since 1998</div>
-          </Link>
+          </Link> */}
 
           {/* Right — actions */}
           <div className={styles.navRight}>

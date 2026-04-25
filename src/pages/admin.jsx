@@ -1052,9 +1052,7 @@ export default function Admin() {
                             </td>
                             <td className={styles.amount}>
                               ₹
-                              {Number(order.total_amount).toLocaleString(
-                                "en-IN",
-                              )}
+                              {order.address}
                             </td>
                             <td>
                               <span
@@ -1253,8 +1251,11 @@ export default function Admin() {
                           >
                             {savingId === p.id ? "…" : "Save"}
                           </button>
-                            
-                          <button onClick={() => handleDelete(p.id)} className={styles.deleteBtn} > 
+
+                          <button
+                            onClick={() => handleDelete(p.id)}
+                            className={styles.deleteBtn}
+                          >
                             Delete
                           </button>
                           <button
