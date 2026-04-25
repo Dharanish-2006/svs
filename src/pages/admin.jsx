@@ -1077,7 +1077,7 @@ export default function Admin() {
                                 {sc.label}
                               </span>
                             </td>
-                            <td>                        "Date",
+                            <td>
 
                               <div className={styles.selectWrap}>
                                 <select
