@@ -1003,10 +1003,10 @@ export default function Admin() {
                     <tr>
                       {[
                         "Order",
-                        "Customer",
+                        "Customer name",
                         "Items",
                         "Total",
-                        "Payment",
+                        "address",
                         "Date",
                         "Status",
                         "Update",
@@ -1040,10 +1040,10 @@ export default function Admin() {
                             <td>
                               <div className={styles.customer}>
                                 <div className={styles.avatar}>
-                                  {(order.user?.username ||
+                                  {(order.full_name ||
                                     "?")[0].toUpperCase()}
                                 </div>
-                                <span>{order.user?.username || "—"}</span>
+                                <span>{order.full_name}</span>
                               </div>
                             </td>
                             <td className={styles.muted}>
@@ -1052,14 +1052,11 @@ export default function Admin() {
                             </td>
                             <td className={styles.amount}>
                               ₹
-                              {order.address}
+                              {order.total_amount}
                             </td>
-                            <td>
-                              <span
-                                className={`${styles.pill} ${order.payment_method === "COD" ? styles.pillCod : styles.pillOnline}`}
-                              >
-                                {order.payment_method}
-                              </span>
+                            <td className={styles.amount}>
+                              ₹
+                              {order.address}
                             </td>
                             <td className={styles.muted}>
                               {new Date(order.created_at).toLocaleDateString(
@@ -1080,7 +1077,8 @@ export default function Admin() {
                                 {sc.label}
                               </span>
                             </td>
-                            <td>
+                            <td>                        "Date",
+
                               <div className={styles.selectWrap}>
                                 <select
                                   value={order.status}
