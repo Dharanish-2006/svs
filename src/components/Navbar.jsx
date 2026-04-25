@@ -115,6 +115,9 @@ export default function Navbar() {
             <Link to="/category/all" className={styles.navLink}>
               All Products
             </Link>
+            <Link to="/contact" className={styles.navLink}>
+              Contact us
+            </Link>
           </nav>
 
           {/* Center — Logo */}

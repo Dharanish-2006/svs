@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.jsx  — full updated file with /contact route added
 import {
   BrowserRouter,
   Routes,
@@ -24,6 +24,7 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Admin from "./pages/admin";
 import CategoryPage from "./pages/CategoryPage";
+import Contact from "./pages/contact";  
 
 // Page transition wrapper
 function PageTransition({ children }) {
@@ -39,7 +40,6 @@ function PageTransition({ children }) {
   );
 }
 
-// Layout wraps Navbar + content
 function Layout({ children }) {
   return (
     <>
@@ -49,7 +49,6 @@ function Layout({ children }) {
   );
 }
 
-// Auth pages have no navbar
 function AuthLayout({ children }) {
   return <PageTransition>{children}</PageTransition>;
 }
@@ -60,109 +59,29 @@ function AppRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Auth — no navbar */}
-        <Route
-          path="/login"
-          element={
-            <AuthLayout>
-              <Login />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <AuthLayout>
-              <Signup />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/verify-otp"
-          element={
-            <AuthLayout>
-              <VerifyOTP />
-            </AuthLayout>
-          }
-        />
+        {/* Auth */}
+        <Route path="/login"      element={<AuthLayout><Login /></AuthLayout>} />
+        <Route path="/signup"     element={<AuthLayout><Signup /></AuthLayout>} />
+        <Route path="/verify-otp" element={<AuthLayout><VerifyOTP /></AuthLayout>} />
 
         {/* Public */}
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />   {/* ← NEW */}
 
-        {/* Category routes */}
-        <Route
-          path="/category/:categoryId"
-          element={
-            <Layout>
-              <CategoryPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/category/:categoryId/:subcategoryId"
-          element={
-            <Layout>
-              <CategoryPage />
-            </Layout>
-          }
-        />
+        {/* Category */}
+        <Route path="/category/:categoryId"                element={<Layout><CategoryPage /></Layout>} />
+        <Route path="/category/:categoryId/:subcategoryId" element={<Layout><CategoryPage /></Layout>} />
 
         {/* Product */}
-        <Route
-          path="/product/:id"
-          element={
-            <Layout>
-              <ProductDetail />
-            </Layout>
-          }
-        />
+        <Route path="/product/:id" element={<Layout><ProductDetail /></Layout>} />
+
+        {/* Cart (public) */}
+        <Route path="/cart" element={<Layout><Cart /></Layout>} />
 
         {/* Protected */}
-        <Route
-          path="/cart"
-          element={
-            <Layout>
-              <Cart />
-            </Layout>
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Checkout />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Orders />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Admin />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/checkout" element={<ProtectedRoute><Layout><Checkout /></Layout></ProtectedRoute>} />
+        <Route path="/orders"   element={<ProtectedRoute><Layout><Orders /></Layout></ProtectedRoute>} />
+        <Route path="/admin"    element={<ProtectedRoute><Layout><Admin /></Layout></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -189,12 +108,8 @@ export default function App() {
                   borderRadius: "2px",
                   boxShadow: "0 4px 16px rgba(44,36,32,0.10)",
                 },
-                success: {
-                  iconTheme: { primary: "#C9973A", secondary: "#FAF7F2" },
-                },
-                error: {
-                  iconTheme: { primary: "#6B2737", secondary: "#FAF7F2" },
-                },
+                success: { iconTheme: { primary: "#C9973A", secondary: "#FAF7F2" } },
+                error:   { iconTheme: { primary: "#6B2737", secondary: "#FAF7F2" } },
               }}
             />
             <AppRoutes />

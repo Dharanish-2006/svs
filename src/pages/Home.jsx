@@ -15,7 +15,6 @@ import styles from './Home.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ── Festival/Offer banners ─────────────────────────────────────────────────
 const BANNERS = [
   {
     id: 1,
@@ -59,13 +58,11 @@ export default function Home() {
   const featuredRef   = useRef(null)
   const bannerRef     = useRef(null)
 
-  // ── Auto-rotate hero banner ────────────────────────────────────────────────
   useEffect(() => {
     const t = setInterval(() => setActiveBanner(a => (a + 1) % BANNERS.length), 5000)
     return () => clearInterval(t)
   }, [])
 
-  // ── Fetch products ─────────────────────────────────────────────────────────
   useEffect(() => {
     productService.list()
       .then(setProducts)
@@ -73,44 +70,27 @@ export default function Home() {
       .finally(() => setLoading(false))
   }, [])
 
-  // ── GSAP scroll animations ─────────────────────────────────────────────────
   useEffect(() => {
     const ctx = gsap.context(() => {
-
-      // Categories reveal
       gsap.from('.cat-card', {
         y: 40, opacity: 0, duration: 0.7, stagger: 0.1,
         ease: 'power3.out',
-        scrollTrigger: {
-          trigger: categoriesRef.current,
-          start: 'top 80%',
-        },
+        scrollTrigger: { trigger: categoriesRef.current, start: 'top 80%' },
       })
-
-      // Featured section
       gsap.from('.featured-title', {
         y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
         scrollTrigger: { trigger: featuredRef.current, start: 'top 85%' },
       })
-
-      // Product cards stagger
       gsap.from('.product-card-gsap', {
         y: 50, opacity: 0, duration: 0.6, stagger: 0.08,
         ease: 'power3.out',
-        scrollTrigger: {
-          trigger: featuredRef.current,
-          start: 'top 75%',
-        },
+        scrollTrigger: { trigger: featuredRef.current, start: 'top 75%' },
       })
-
-      // Festival banner
       gsap.from('.festival-content', {
         x: -60, opacity: 0, duration: 0.9, ease: 'power3.out',
         scrollTrigger: { trigger: bannerRef.current, start: 'top 80%' },
       })
-
     })
-
     return () => ctx.revert()
   }, [products])
 
@@ -134,7 +114,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
 
-      {/* ══════════════ HERO BANNER ══════════════ */}
+      {/* ══ HERO ══ */}
       <section ref={heroRef} className={styles.hero}>
         <motion.div
           key={banner.id}
@@ -144,10 +124,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         />
-
-        {/* Decorative pattern overlay */}
         <div className={styles.heroPattern} />
-
         <div className={`container ${styles.heroContent}`}>
           <motion.div
             key={`content-${banner.id}`}
@@ -167,8 +144,6 @@ export default function Home() {
               <ArrowRight size={16} />
             </Link>
           </motion.div>
-
-          {/* Decorative right side */}
           <div className={styles.heroDecor}>
             <div className={styles.heroCircle1} />
             <div className={styles.heroCircle2} />
@@ -179,26 +154,20 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Banner indicators */}
         <div className={styles.heroIndicators}>
           {BANNERS.map((_, i) => (
             <button key={i} className={`${styles.indicator} ${i === activeBanner ? styles.indicatorActive : ''}`}
               onClick={() => setActiveBanner(i)} />
           ))}
         </div>
-
-        {/* Scroll hint */}
         <div className={styles.scrollHint}>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.8 }}>
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
             <ChevronRight size={16} style={{ transform: 'rotate(90deg)', color: 'rgba(255,255,255,0.5)' }} />
           </motion.div>
         </div>
       </section>
 
-      {/* ══════════════ GOLD MARQUEE ══════════════ */}
+      {/* ══ MARQUEE ══ */}
       <div className={styles.marqueeWrap}>
         <div className={styles.marquee}>
           {[...Array(3)].map((_, i) => (
@@ -210,14 +179,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══════════════ CATEGORIES ══════════════ */}
+      {/* ══ CATEGORIES ══ */}
       <section ref={categoriesRef} className={styles.categories}>
         <div className="container">
           <div className={styles.sectionHead}>
             <span className="section-eyebrow">Browse</span>
             <h2 className="display-md">Our Collections</h2>
           </div>
-
           <div className={styles.catGrid}>
             {CATEGORIES.map((cat, i) => (
               <Link key={cat.id} to={`/category/${cat.id}`}
@@ -226,16 +194,14 @@ export default function Home() {
                 <div className={styles.catIcon}>{cat.icon}</div>
                 <h3 className={styles.catName}>{cat.label}</h3>
                 <p className={styles.catDesc}>{cat.description}</p>
-                <span className={styles.catArrow}>
-                  Browse <ArrowRight size={14} />
-                </span>
+                <span className={styles.catArrow}>Browse <ArrowRight size={14} /></span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════ FESTIVAL BANNER ══════════════ */}
+      {/* ══ FESTIVAL BANNER ══ */}
       <section ref={bannerRef} className={styles.festivalBanner}>
         <div className={`container ${styles.festivalInner}`}>
           <div className={`festival-content ${styles.festivalContent}`}>
@@ -275,17 +241,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════ FEATURED PRODUCTS ══════════════ */}
+      {/* ══ FEATURED PRODUCTS ══ */}
       <section ref={featuredRef} className={styles.featured}>
         <div className="container">
           <div className={`featured-title ${styles.sectionHead}`}>
             <span className="section-eyebrow">Handpicked</span>
             <h2 className="display-md">Bestsellers</h2>
-            <p className={styles.sectionSub}>
-              Curated with love — our most cherished pieces
-            </p>
+            <p className={styles.sectionSub}>Curated with love — our most cherished pieces</p>
           </div>
-
           {loading ? (
             <div className="products-grid">
               {[...Array(8)].map((_, i) => (
@@ -313,7 +276,6 @@ export default function Home() {
               <p>New arrivals coming soon</p>
             </div>
           )}
-
           <div className={styles.viewAll}>
             <Link to="/category/all" className="btn btn-outline">
               View All Products <ArrowRight size={16} />
@@ -322,14 +284,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════ WHY US ══════════════ */}
+      {/* ══ WHY US ══ */}
       <section className={styles.whyUs}>
         <div className="container">
           <div className={styles.whyGrid}>
             {[
-              { icon: '🚚', title: 'Free Delivery', desc: 'On orders above ₹999' },
-              { icon: '↩️', title: 'Easy Returns', desc: '7-day hassle-free returns' },
-              { icon: '🔒', title: 'Secure Payment', desc: 'Razorpay secured checkout' },
+              { icon: '🚚', title: 'Free Delivery',    desc: 'On orders above ₹999' },
+              { icon: '↩️', title: 'Easy Returns',     desc: '7-day hassle-free returns' },
+              { icon: '🔒', title: 'Secure Payment',   desc: 'Razorpay secured checkout' },
               { icon: '🌟', title: 'Authentic Quality', desc: 'Handpicked from artisans' },
             ].map((item, i) => (
               <motion.div key={i} className={styles.whyCard}
@@ -346,17 +308,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════ FOOTER ══════════════ */}
+      {/* ══ FOOTER ══ */}
       <footer className={styles.footer}>
         <div className="container">
           <div className={styles.footerGrid}>
             <div className={styles.footerBrand}>
               <span className={styles.footerLogo}>SVS Collection</span>
               <p className={styles.footerTagline}>
-                Weaving tradition into modern elegance since 1998.
+                Weaving tradition into modern elegance.
               </p>
               <p style={{ fontSize: 12, color: 'var(--sand)', marginTop: 8 }}>
-                📍 Tiruchirappalli, Tamil Nadu
+                📍 Taman Sri Sentosa, Kuala Lumpur, Malaysia
               </p>
             </div>
 
@@ -377,18 +339,22 @@ export default function Home() {
               <Link to="/cart"    className={styles.footerLink}>My Cart</Link>
             </div>
 
+            {/* ── UPDATED with real contact data ── */}
             <div>
               <h4 className={styles.footerHead}>Support</h4>
-              <a href="tel:+91XXXXXXXXXX" className={styles.footerLink}>Call Us</a>
-              <a href="mailto:support@svscollection.in" className={styles.footerLink}>Email Us</a>
-              <Link to="/cart" className={styles.footerLink}>Track Order</Link>
+              <a href="tel:+60149773188" className={styles.footerLink}>+601 4977 3188</a>
+              <a href="mailto:thesvscollections@gmail.com" className={styles.footerLink}>thesvscollections@gmail.com</a>
+              <a href="https://wa.me/60149773188" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>WhatsApp Us</a>
+              <Link to="/contact" className={styles.footerLink}>Contact Us</Link>
+              <Link to="/orders"  className={styles.footerLink}>Track Order</Link>
+              <a href="https://share.google/vRxmzoKAsTvpq2Wef" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>Find Our Store</a>
             </div>
           </div>
 
           <div className={styles.footerBottom}>
             <p>© 2024 SVS Collection. All rights reserved.</p>
             <p style={{ color: 'var(--gold)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>
-              Made with ❤️ in Tamil Nadu
+              Made with ❤️ in Malasyia
             </p>
           </div>
         </div>
