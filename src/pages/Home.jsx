@@ -226,7 +226,7 @@ export default function Home() {
           </div>
           <div className={styles.festivalRight}>
             <div className={styles.festivalStat}>
-              <span className={styles.statNum}>25+</span>
+              <span className={styles.statNum}>5+</span>
               <span className={styles.statLabel}>Years of Heritage</span>
             </div>
             <div className={styles.festivalStat}>
@@ -234,7 +234,7 @@ export default function Home() {
               <span className={styles.statLabel}>Happy Customers</span>
             </div>
             <div className={styles.festivalStat}>
-              <span className={styles.statNum}>200+</span>
+              <span className={styles.statNum}>50+</span>
               <span className={styles.statLabel}>Products</span>
             </div>
           </div>
@@ -289,8 +289,6 @@ export default function Home() {
         <div className="container">
           <div className={styles.whyGrid}>
             {[
-              { icon: '🚚', title: 'Free Delivery',    desc: 'On orders above ₹999' },
-              { icon: '↩️', title: 'Easy Returns',     desc: '7-day hassle-free returns' },
               { icon: '🔒', title: 'Secure Payment',   desc: 'Razorpay secured checkout' },
               { icon: '🌟', title: 'Authentic Quality', desc: 'Handpicked from artisans' },
             ].map((item, i) => (
