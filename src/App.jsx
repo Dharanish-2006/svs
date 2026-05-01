@@ -1,4 +1,3 @@
-// src/App.jsx  — full updated file with /contact route added
 import {
   BrowserRouter,
   Routes,
@@ -10,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { CategoryProvider } from "./context/CategoryContext";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -24,7 +24,6 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Admin from "./pages/admin";
 import CategoryPage from "./pages/CategoryPage";
-import Contact from "./pages/contact";  
 
 // Page transition wrapper
 function PageTransition({ children }) {
@@ -59,29 +58,109 @@ function AppRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Auth */}
-        <Route path="/login"      element={<AuthLayout><Login /></AuthLayout>} />
-        <Route path="/signup"     element={<AuthLayout><Signup /></AuthLayout>} />
-        <Route path="/verify-otp" element={<AuthLayout><VerifyOTP /></AuthLayout>} />
+        {/* Auth — no navbar */}
+        <Route
+          path="/login"
+          element={
+            <AuthLayout>
+              <Login />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <AuthLayout>
+              <Signup />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/verify-otp"
+          element={
+            <AuthLayout>
+              <VerifyOTP />
+            </AuthLayout>
+          }
+        />
 
         {/* Public */}
-        <Route path="/" element={<Layout><Home /></Layout>} />
-        <Route path="/contact" element={<Layout><Contact /></Layout>} />   {/* ← NEW */}
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
 
-        {/* Category */}
-        <Route path="/category/:categoryId"                element={<Layout><CategoryPage /></Layout>} />
-        <Route path="/category/:categoryId/:subcategoryId" element={<Layout><CategoryPage /></Layout>} />
+        {/* Category routes */}
+        <Route
+          path="/category/:categoryId"
+          element={
+            <Layout>
+              <CategoryPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/category/:categoryId/:subcategoryId"
+          element={
+            <Layout>
+              <CategoryPage />
+            </Layout>
+          }
+        />
 
         {/* Product */}
-        <Route path="/product/:id" element={<Layout><ProductDetail /></Layout>} />
-
-        {/* Cart (public) */}
-        <Route path="/cart" element={<Layout><Cart /></Layout>} />
+        <Route
+          path="/product/:id"
+          element={
+            <Layout>
+              <ProductDetail />
+            </Layout>
+          }
+        />
 
         {/* Protected */}
-        <Route path="/checkout" element={<ProtectedRoute><Layout><Checkout /></Layout></ProtectedRoute>} />
-        <Route path="/orders"   element={<ProtectedRoute><Layout><Orders /></Layout></ProtectedRoute>} />
-        <Route path="/admin"    element={<ProtectedRoute><Layout><Admin /></Layout></ProtectedRoute>} />
+        <Route
+          path="/cart"
+          element={
+            <Layout>
+              <Cart />
+            </Layout>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Checkout />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Orders />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Admin />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -94,26 +173,32 @@ export default function App() {
     <ThemeProvider>
       <BrowserRouter>
         <AuthProvider>
-          <CartProvider>
-            <Toaster
-              position="bottom-right"
-              toastOptions={{
-                className: "svs-toast",
-                style: {
-                  background: "#FFFFFF",
-                  color: "#2C2420",
-                  border: "1px solid #D4C9B8",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "14px",
-                  borderRadius: "2px",
-                  boxShadow: "0 4px 16px rgba(44,36,32,0.10)",
-                },
-                success: { iconTheme: { primary: "#C9973A", secondary: "#FAF7F2" } },
-                error:   { iconTheme: { primary: "#6B2737", secondary: "#FAF7F2" } },
-              }}
-            />
-            <AppRoutes />
-          </CartProvider>
+          <CategoryProvider>
+            <CartProvider>
+              <Toaster
+                position="bottom-right"
+                toastOptions={{
+                  className: "svs-toast",
+                  style: {
+                    background: "#FFFFFF",
+                    color: "#2C2420",
+                    border: "1px solid #D4C9B8",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "14px",
+                    borderRadius: "2px",
+                    boxShadow: "0 4px 16px rgba(44,36,32,0.10)",
+                  },
+                  success: {
+                    iconTheme: { primary: "#C9973A", secondary: "#FAF7F2" },
+                  },
+                  error: {
+                    iconTheme: { primary: "#6B2737", secondary: "#FAF7F2" },
+                  },
+                }}
+              />
+              <AppRoutes />
+            </CartProvider>
+          </CategoryProvider>
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>

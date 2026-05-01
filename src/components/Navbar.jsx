@@ -4,8 +4,6 @@ import logo from "../assets/logo.jpg";
 import {
   motion,
   AnimatePresence,
-  useScroll,
-  useTransform,
 } from "framer-motion";
 import {
   ShoppingBag,
@@ -20,12 +18,13 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
-import { CATEGORIES } from "../data/categories";
+import { useCategories } from "../context/CategoryContext";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { cartCount } = useCart();
+  const { categories, loading: catsLoading } = useCategories();
   const location = useLocation();
   const navigate = useNavigate();
   const { dark, toggle } = useTheme();
@@ -80,6 +79,11 @@ export default function Navbar() {
 
   const isHome = location.pathname === "/";
 
+  // Skeleton placeholders while categories load
+  const navCategories = catsLoading
+    ? []
+    : categories;
+
   return (
     <>
       {/* ── Main Navbar ── */}
@@ -96,7 +100,7 @@ export default function Navbar() {
               <img src={logo} alt="SVS Collection" className={styles.logoImg} />
             </Link>
 
-            {CATEGORIES.map((cat) => (
+            {navCategories.map((cat) => (
               <div
                 key={cat.id}
                 className={styles.navItem}
@@ -105,26 +109,29 @@ export default function Navbar() {
               >
                 <Link to={`/category/${cat.id}`} className={styles.navLink}>
                   {cat.label}
-                  <ChevronDown
-                    size={12}
-                    className={`${styles.chevron} ${megaMenu === cat.id ? styles.chevronUp : ""}`}
-                  />
+                  {cat.subcategories?.length > 0 && (
+                    <ChevronDown
+                      size={12}
+                      className={`${styles.chevron} ${megaMenu === cat.id ? styles.chevronUp : ""}`}
+                    />
+                  )}
                 </Link>
               </div>
             ))}
+
+            {/* Show skeleton bars while loading */}
+            {catsLoading && (
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className={styles.navSkeleton} />
+                ))}
+              </>
+            )}
+
             <Link to="/category/all" className={styles.navLink}>
               All Products
             </Link>
-            <Link to="/contact" className={styles.navLink}>
-              Contact us
-            </Link>
           </nav>
-
-          {/* Center — Logo */}
-          {/* <Link to="/" className={styles.logo}>
-            <div className={styles.logoInner}>
-            </div>
-          </Link> */}
 
           {/* Right — actions */}
           <div className={styles.navRight}>
@@ -190,20 +197,22 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* ── Mega Menu ── */}
+        {/* ── Mega Menu — only for categories that have subcategories ── */}
         <AnimatePresence>
-          {megaMenu && (
-            <motion.div
-              className={styles.megaMenu}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              onMouseEnter={() => setMegaMenu(megaMenu)}
-              onMouseLeave={() => setMegaMenu(null)}
-            >
-              {CATEGORIES.filter((c) => c.id === megaMenu).map((cat) => (
-                <div key={cat.id} className={styles.megaInner}>
+          {megaMenu && (() => {
+            const cat = navCategories.find((c) => c.id === megaMenu);
+            if (!cat || !cat.subcategories?.length) return null;
+            return (
+              <motion.div
+                className={styles.megaMenu}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                onMouseEnter={() => setMegaMenu(megaMenu)}
+                onMouseLeave={() => setMegaMenu(null)}
+              >
+                <div className={styles.megaInner}>
                   <div className={styles.megaLeft}>
                     <span className="section-eyebrow">{cat.label}</span>
                     <p className={styles.megaDesc}>{cat.description}</p>
@@ -219,7 +228,7 @@ export default function Navbar() {
                     {cat.subcategories.map((sub) => (
                       <div key={sub.id} className={styles.megaColumn}>
                         <h4 className={styles.megaColumnHead}>{sub.label}</h4>
-                        {sub.items.map((item) => (
+                        {sub.items?.map((item) => (
                           <Link
                             key={item.id}
                             to={`/category/${cat.id}/${item.id}`}
@@ -232,9 +241,9 @@ export default function Navbar() {
                     ))}
                   </div>
                 </div>
-              ))}
-            </motion.div>
-          )}
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
 
         {/* ── Search overlay ── */}
@@ -305,59 +314,73 @@ export default function Navbar() {
 
               {/* Mobile nav */}
               <nav className={styles.mobileNav}>
-                {CATEGORIES.map((cat) => (
+                {navCategories.map((cat) => (
                   <div key={cat.id}>
-                    <button
-                      className={styles.mobileNavItem}
-                      onClick={() =>
-                        setMobileExpanded(
-                          mobileExpanded === cat.id ? null : cat.id,
-                        )
-                      }
-                    >
-                      <span>
-                        {cat.icon} {cat.label}
-                      </span>
-                      <ChevronDown
-                        size={16}
-                        style={{
-                          transform:
-                            mobileExpanded === cat.id
-                              ? "rotate(180deg)"
-                              : "none",
-                          transition: "transform 0.2s",
-                        }}
-                      />
-                    </button>
-                    <AnimatePresence>
-                      {mobileExpanded === cat.id && (
-                        <motion.div
-                          className={styles.mobileSub}
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
+                    {cat.subcategories?.length > 0 ? (
+                      <>
+                        <button
+                          className={styles.mobileNavItem}
+                          onClick={() =>
+                            setMobileExpanded(
+                              mobileExpanded === cat.id ? null : cat.id
+                            )
+                          }
                         >
-                          <Link
-                            to={`/category/${cat.id}`}
-                            className={styles.mobileSubLink}
-                            style={{ fontWeight: 600, color: "var(--maroon)" }}
-                          >
-                            All {cat.label}
-                          </Link>
-                          {cat.subcategories
-                            .flatMap((sub) => sub.items)
-                            .map((item) => (
+                          <span>
+                            {cat.icon} {cat.label}
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            style={{
+                              transform:
+                                mobileExpanded === cat.id
+                                  ? "rotate(180deg)"
+                                  : "none",
+                              transition: "transform 0.2s",
+                            }}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {mobileExpanded === cat.id && (
+                            <motion.div
+                              className={styles.mobileSub}
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                            >
                               <Link
-                                key={item.id}
-                                to={`/category/${cat.id}/${item.id}`}
+                                to={`/category/${cat.id}`}
                                 className={styles.mobileSubLink}
+                                style={{ fontWeight: 600, color: "var(--maroon)" }}
                               >
-                                {item.label}
+                                All {cat.label}
                               </Link>
-                            ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                              {cat.subcategories
+                                .flatMap((sub) => sub.items || [])
+                                .map((item) => (
+                                  <Link
+                                    key={item.id}
+                                    to={`/category/${cat.id}/${item.id}`}
+                                    className={styles.mobileSubLink}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    ) : (
+                      // No subcategories — just a direct link
+                      <Link
+                        to={`/category/${cat.id}`}
+                        className={styles.mobileNavItem}
+                      >
+                        <span>
+                          {cat.icon} {cat.label}
+                        </span>
+                      </Link>
+                    )}
                   </div>
                 ))}
 

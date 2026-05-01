@@ -11,7 +11,7 @@ import { cartService } from '../services'
 import ProductCard from '../components/ProductCard'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
-import { CATEGORIES, getCategoryById } from '../data/categories'
+import { useCategories } from '../context/CategoryContext'
 import styles from './CategoryPage.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -25,7 +25,7 @@ const SORT_OPTIONS = [
 
 export default function CategoryPage() {
   const { categoryId, subcategoryId } = useParams()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const navigate  = useNavigate()
 
   const [allProducts,  setAllProducts]  = useState([])
@@ -33,10 +33,11 @@ export default function CategoryPage() {
   const [viewMode,     setViewMode]     = useState('grid')
   const [sort,         setSort]         = useState('default')
   const [priceRange,   setPriceRange]   = useState([0, 5000])
-  const [filterOpen,   setFilterOpen]   = useState(false)  // mobile
+  const [filterOpen,   setFilterOpen]   = useState(false)
 
   const { increment }       = useCart()
   const { isAuthenticated } = useAuth()
+  const { categories, getCategoryById } = useCategories()
 
   const category    = getCategoryById(categoryId)
   const searchQuery = searchParams.get('q') || ''
@@ -93,17 +94,16 @@ export default function CategoryPage() {
     ...(categoryId && categoryId !== 'all'
       ? [{ label: category?.label || categoryId, to: `/category/${categoryId}` }]
       : [{ label: 'All Products', to: '/category/all' }]),
-    ...(subcategoryId
-      ? [{ label: subcategoryId, to: null }]
-      : []),
-    ...(searchQuery
-      ? [{ label: `"${searchQuery}"`, to: null }]
-      : []),
+    ...(subcategoryId ? [{ label: subcategoryId, to: null }] : []),
+    ...(searchQuery   ? [{ label: `"${searchQuery}"`, to: null }] : []),
   ]
 
   const pageTitle = searchQuery
     ? `Search: "${searchQuery}"`
     : category?.label || 'All Products'
+
+  // Subcategory pills — from the category's subcategories (if any)
+  const subPillItems = category?.subcategories?.flatMap(sub => sub.items || []) || []
 
   return (
     <div className={styles.page}>
@@ -126,20 +126,23 @@ export default function CategoryPage() {
             ))}
           </nav>
 
-          <h1 className={`display-md ${styles.heroTitle}`}>{pageTitle}</h1>
+          <h1 className={`display-md ${styles.heroTitle}`}>
+            {category?.icon && <span style={{ marginRight: 10 }}>{category.icon}</span>}
+            {pageTitle}
+          </h1>
 
-          {category && (
+          {category?.description && (
             <p className={styles.heroDesc}>{category.description}</p>
           )}
 
-          {/* Sub-category pills */}
-          {category && (
+          {/* Sub-category pills — only if they exist */}
+          {subPillItems.length > 0 && (
             <div className={styles.subPills}>
               <Link to={`/category/${categoryId}`}
                 className={`${styles.subPill} ${!subcategoryId ? styles.subPillActive : ''}`}>
                 All
               </Link>
-              {category.subcategories.flatMap(sub => sub.items).map(item => (
+              {subPillItems.map(item => (
                 <Link key={item.id}
                   to={`/category/${categoryId}/${item.id}`}
                   className={`${styles.subPill} ${subcategoryId === item.id ? styles.subPillActive : ''}`}>
@@ -159,15 +162,16 @@ export default function CategoryPage() {
           <aside className={styles.sidebar}>
             <div className={styles.sidebarSection}>
               <h3 className={styles.sidebarHead}>Categories</h3>
-              {CATEGORIES.map(cat => (
+              {categories.map(cat => (
                 <div key={cat.id}>
                   <Link to={`/category/${cat.id}`}
                     className={`${styles.sidebarCat} ${cat.id === categoryId ? styles.sidebarCatActive : ''}`}>
                     {cat.icon} {cat.label}
                   </Link>
-                  {cat.id === categoryId && (
+                  {/* Subcategories if they exist and this is the active cat */}
+                  {cat.id === categoryId && cat.subcategories?.length > 0 && (
                     <div className={styles.sidebarSubs}>
-                      {cat.subcategories.flatMap(sub => sub.items).map(item => (
+                      {cat.subcategories.flatMap(sub => sub.items || []).map(item => (
                         <Link key={item.id}
                           to={`/category/${cat.id}/${item.id}`}
                           className={`${styles.sidebarSub} ${item.id === subcategoryId ? styles.sidebarSubActive : ''}`}>
@@ -184,13 +188,13 @@ export default function CategoryPage() {
               <h3 className={styles.sidebarHead}>Price Range</h3>
               <div className={styles.priceInputs}>
                 <div className={styles.priceField}>
-                  <label className="label">Min RM</label>
+                  <label className="label">Min ₹</label>
                   <input type="number" className="input" style={{ padding: '8px 12px', fontSize: 13 }}
                     value={priceRange[0]}
                     onChange={e => setPriceRange([Number(e.target.value), priceRange[1]])} />
                 </div>
                 <div className={styles.priceField}>
-                  <label className="label">Max RM</label>
+                  <label className="label">Max ₹</label>
                   <input type="number" className="input" style={{ padding: '8px 12px', fontSize: 13 }}
                     value={priceRange[1]}
                     onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])} />
@@ -199,7 +203,7 @@ export default function CategoryPage() {
               <input type="range" min="0" max="10000" value={priceRange[1]}
                 onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
                 className={styles.rangeSlider} />
-              <p className={styles.priceLabel}>Up to RM{priceRange[1].toLocaleString('en-IN')}</p>
+              <p className={styles.priceLabel}>Up to ₹{priceRange[1].toLocaleString('en-IN')}</p>
             </div>
           </aside>
 
@@ -261,7 +265,7 @@ export default function CategoryPage() {
                 className={viewMode === 'grid' ? 'products-grid' : styles.listGrid}
               >
                 <AnimatePresence mode="popLayout">
-                  {filtered.map((p, i) => (
+                  {filtered.map((p) => (
                     <motion.div key={p.id} className="product-item"
                       layout
                       initial={{ opacity: 0 }}
@@ -292,10 +296,9 @@ export default function CategoryPage() {
                 <h3>Filters</h3>
                 <button onClick={() => setFilterOpen(false)}><X size={20} /></button>
               </div>
-              {/* reuse sidebar content */}
               <div className={styles.sidebarSection} style={{ padding: '0 20px 20px' }}>
                 <h4 className={styles.sidebarHead}>Categories</h4>
-                {CATEGORIES.map(cat => (
+                {categories.map(cat => (
                   <Link key={cat.id} to={`/category/${cat.id}`}
                     className={styles.sidebarCat}
                     onClick={() => setFilterOpen(false)}>
@@ -308,7 +311,7 @@ export default function CategoryPage() {
                 <input type="range" min="0" max="10000" value={priceRange[1]}
                   onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
                   className={styles.rangeSlider} />
-                <p className={styles.priceLabel}>RM{priceRange[1].toLocaleString('en-IN')}</p>
+                <p className={styles.priceLabel}>₹{priceRange[1].toLocaleString('en-IN')}</p>
               </div>
               <div style={{ padding: 20 }}>
                 <button className="btn btn-primary" style={{ width: '100%' }}

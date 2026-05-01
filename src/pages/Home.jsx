@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react'
@@ -10,11 +10,12 @@ import { productService, cartService } from '../services'
 import ProductCard from '../components/ProductCard'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
-import { CATEGORIES } from '../data/categories'
+import { useCategories } from '../context/CategoryContext'
 import styles from './Home.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// ── Festival/Offer banners ─────────────────────────────────────────────────
 const BANNERS = [
   {
     id: 1,
@@ -22,7 +23,7 @@ const BANNERS = [
     title: 'Pure\nSilk Sarees',
     subtitle: 'Woven with centuries of tradition',
     cta: 'Explore Collection',
-    link: '/category/clothing/sarees',
+    link: '/category/all',
     bg: 'linear-gradient(135deg, #2C1810 0%, #6B2737 60%, #9A3F4F 100%)',
   },
   {
@@ -31,7 +32,7 @@ const BANNERS = [
     title: 'Temple\nJewelry',
     subtitle: 'Timeless ornaments for sacred moments',
     cta: 'Shop Jewelry',
-    link: '/category/jewelry',
+    link: '/category/all',
     bg: 'linear-gradient(135deg, #1C1A0E 0%, #5C4A0C 60%, #C9973A 100%)',
   },
   {
@@ -40,7 +41,7 @@ const BANNERS = [
     title: 'Sacred\nRituals',
     subtitle: 'Complete pooja kits for every puja',
     cta: 'Discover Items',
-    link: '/category/pooja',
+    link: '/category/all',
     bg: 'linear-gradient(135deg, #0A1A10 0%, #1A4A2A 60%, #2A7A3A 100%)',
   },
 ]
@@ -51,6 +52,7 @@ export default function Home() {
   const [activeBanner,  setActiveBanner]  = useState(0)
   const { increment }    = useCart()
   const { isAuthenticated } = useAuth()
+  const { categories, loading: catsLoading } = useCategories()
   const navigate = useNavigate()
 
   const heroRef       = useRef(null)
@@ -71,11 +73,15 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    if (catsLoading) return
     const ctx = gsap.context(() => {
       gsap.from('.cat-card', {
         y: 40, opacity: 0, duration: 0.7, stagger: 0.1,
         ease: 'power3.out',
-        scrollTrigger: { trigger: categoriesRef.current, start: 'top 80%' },
+        scrollTrigger: {
+          trigger: categoriesRef.current,
+          start: 'top 80%',
+        },
       })
       gsap.from('.featured-title', {
         y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
@@ -84,7 +90,10 @@ export default function Home() {
       gsap.from('.product-card-gsap', {
         y: 50, opacity: 0, duration: 0.6, stagger: 0.08,
         ease: 'power3.out',
-        scrollTrigger: { trigger: featuredRef.current, start: 'top 75%' },
+        scrollTrigger: {
+          trigger: featuredRef.current,
+          start: 'top 75%',
+        },
       })
       gsap.from('.festival-content', {
         x: -60, opacity: 0, duration: 0.9, ease: 'power3.out',
@@ -92,7 +101,7 @@ export default function Home() {
       })
     })
     return () => ctx.revert()
-  }, [products])
+  }, [products, catsLoading])
 
   const handleAddToCart = async (product) => {
     if (!isAuthenticated) {
@@ -114,7 +123,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
 
-      {/* ══ HERO ══ */}
+      {/* ══════════════ HERO BANNER ══════════════ */}
       <section ref={heroRef} className={styles.hero}>
         <motion.div
           key={banner.id}
@@ -167,7 +176,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ MARQUEE ══ */}
+      {/* ══════════════ GOLD MARQUEE ══════════════ */}
       <div className={styles.marqueeWrap}>
         <div className={styles.marquee}>
           {[...Array(3)].map((_, i) => (
@@ -179,29 +188,59 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══ CATEGORIES ══ */}
+      {/* ══════════════ CATEGORIES ══════════════ */}
       <section ref={categoriesRef} className={styles.categories}>
         <div className="container">
           <div className={styles.sectionHead}>
             <span className="section-eyebrow">Browse</span>
             <h2 className="display-md">Our Collections</h2>
           </div>
-          <div className={styles.catGrid}>
-            {CATEGORIES.map((cat, i) => (
-              <Link key={cat.id} to={`/category/${cat.id}`}
-                className={`cat-card ${styles.catCard}`}
-                style={{ '--cat-delay': `${i * 0.1}s` }}>
-                <div className={styles.catIcon}>{cat.icon}</div>
-                <h3 className={styles.catName}>{cat.label}</h3>
-                <p className={styles.catDesc}>{cat.description}</p>
-                <span className={styles.catArrow}>Browse <ArrowRight size={14} /></span>
+
+          {catsLoading ? (
+            /* Skeleton grid while categories load */
+            <div className={styles.catGrid}>
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className={styles.catCard} style={{ pointerEvents: 'none' }}>
+                  <div className="skeleton" style={{ width: 48, height: 48, borderRadius: '50%', marginBottom: 12 }} />
+                  <div className="skeleton" style={{ height: 22, width: '60%', marginBottom: 8 }} />
+                  <div className="skeleton" style={{ height: 12, width: '80%' }} />
+                </div>
+              ))}
+            </div>
+          ) : categories.length > 0 ? (
+            <div className={styles.catGrid}>
+              {categories.map((cat, i) => (
+                <Link key={cat.id} to={`/category/${cat.id}`}
+                  className={`cat-card ${styles.catCard}`}
+                  style={{ '--cat-delay': `${i * 0.1}s` }}>
+                  <div className={styles.catIcon}>{cat.icon}</div>
+                  <h3 className={styles.catName}>{cat.label}</h3>
+                  {cat.description && (
+                    <p className={styles.catDesc}>{cat.description}</p>
+                  )}
+                  {cat.productCount > 0 && (
+                    <p className={styles.catDesc} style={{ color: 'var(--gold-deep)', fontSize: 11, fontWeight: 600 }}>
+                      {cat.productCount} product{cat.productCount !== 1 ? 's' : ''}
+                    </p>
+                  )}
+                  <span className={styles.catArrow}>
+                    Browse <ArrowRight size={14} />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state" style={{ padding: '40px 20px' }}>
+              <p style={{ color: 'var(--text-muted)' }}>No categories yet — add some from the admin panel.</p>
+              <Link to="/category/all" className="btn btn-outline" style={{ marginTop: 16 }}>
+                Browse All Products
               </Link>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ══ FESTIVAL BANNER ══ */}
+      {/* ══════════════ FESTIVAL BANNER ══════════════ */}
       <section ref={bannerRef} className={styles.festivalBanner}>
         <div className={`container ${styles.festivalInner}`}>
           <div className={`festival-content ${styles.festivalContent}`}>
@@ -217,38 +256,39 @@ export default function Home() {
               with temple jewelry that tells the story of our heritage.
             </p>
             <div className={styles.festivalBtns}>
-              <Link to="/category/clothing" className="btn btn-gold">Shop Clothing</Link>
-              <Link to="/category/jewelry"  className="btn btn-outline"
+              <Link to="/category/all" className="btn btn-gold">Shop Now</Link>
+              <Link to="/category/all" className="btn btn-outline"
                 style={{ borderColor: 'rgba(201,151,58,0.5)', color: 'var(--gold-light)' }}>
-                Shop Jewelry
+                View All
               </Link>
             </div>
           </div>
           <div className={styles.festivalRight}>
-            <div className={styles.festivalStat}>
-              <span className={styles.statNum}>5+</span>
-              <span className={styles.statLabel}>Years of Heritage</span>
-            </div>
-            <div className={styles.festivalStat}>
-              <span className={styles.statNum}>5K+</span>
-              <span className={styles.statLabel}>Happy Customers</span>
-            </div>
-            <div className={styles.festivalStat}>
-              <span className={styles.statNum}>50+</span>
-              <span className={styles.statLabel}>Products</span>
-            </div>
+            {[
+              { num: '25+', label: 'Years of Heritage' },
+              { num: '5K+', label: 'Happy Customers' },
+              { num: '200+', label: 'Products' },
+            ].map((s) => (
+              <div key={s.label} className={styles.festivalStat}>
+                <span className={styles.statNum}>{s.num}</span>
+                <span className={styles.statLabel}>{s.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ══ FEATURED PRODUCTS ══ */}
+      {/* ══════════════ FEATURED PRODUCTS ══════════════ */}
       <section ref={featuredRef} className={styles.featured}>
         <div className="container">
           <div className={`featured-title ${styles.sectionHead}`}>
             <span className="section-eyebrow">Handpicked</span>
             <h2 className="display-md">Bestsellers</h2>
-            <p className={styles.sectionSub}>Curated with love — our most cherished pieces</p>
+            <p className={styles.sectionSub}>
+              Curated with love — our most cherished pieces
+            </p>
           </div>
+
           {loading ? (
             <div className="products-grid">
               {[...Array(8)].map((_, i) => (
@@ -264,7 +304,7 @@ export default function Home() {
             </div>
           ) : products.length > 0 ? (
             <div className="products-grid">
-              {products.map((p, i) => (
+              {products.map((p) => (
                 <div key={p.id} className="product-card-gsap">
                   <ProductCard product={p} delay={0} onAddToCart={handleAddToCart} />
                 </div>
@@ -284,12 +324,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ WHY US ══ */}
       <section className={styles.whyUs}>
         <div className="container">
           <div className={styles.whyGrid}>
             {[
-              { icon: '🔒', title: 'Secure Payment',   desc: 'Razorpay secured checkout' },
+              { icon: '🚚', title: 'Free Delivery',    desc: 'On orders above ₹999' },
+              { icon: '↩️', title: 'Easy Returns',      desc: '7-day hassle-free returns' },
+              { icon: '🔒', title: 'Secure Payment',    desc: 'Razorpay secured checkout' },
               { icon: '🌟', title: 'Authentic Quality', desc: 'Handpicked from artisans' },
             ].map((item, i) => (
               <motion.div key={i} className={styles.whyCard}
@@ -305,9 +346,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ══ FOOTER ══ */}
-      <footer className={styles.footer}>
+     <footer className={styles.footer}>
         <div className="container">
           <div className={styles.footerGrid}>
             <div className={styles.footerBrand}>
@@ -337,7 +376,6 @@ export default function Home() {
               <Link to="/cart"    className={styles.footerLink}>My Cart</Link>
             </div>
 
-            {/* ── UPDATED with real contact data ── */}
             <div>
               <h4 className={styles.footerHead}>Support</h4>
               <a href="tel:+60149773188" className={styles.footerLink}>+601 4977 3188</a>

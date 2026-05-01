@@ -78,6 +78,20 @@
 .navLink:hover        { color: var(--maroon); }
 .navLink:hover::after { transform: scaleX(1); }
 
+/* ── Nav skeleton (loading state) ── */
+.navSkeleton {
+  width: 72px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--cream) 25%, var(--ivory-dark) 50%, var(--cream) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .chevron {
   transition: transform 0.2s;
 }
