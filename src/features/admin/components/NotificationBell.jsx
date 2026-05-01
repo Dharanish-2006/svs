@@ -37,7 +37,7 @@ export default function NotificationBell() {
               <div key={i} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>Order #{n.order_id}</div>
                 <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                  {n.customer} — ₹{n.amount}
+                  {n.customer} — RM{n.amount}
                 </div>
               </div>
             ))}

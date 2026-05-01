@@ -91,7 +91,7 @@ export default function Orders() {
                           <span className={styles.itemName}>{item.product_name}</span>
                           <span className={styles.itemQty}>×{item.quantity}</span>
                         </div>
-                        <span className={styles.itemPrice}>₹{Number(item.price).toLocaleString('en-IN')}</span>
+                        <span className={styles.itemPrice}>RM{Number(item.price).toLocaleString('en-IN')}</span>
                       </div>
                     ))}
                     {order.items?.length > 3 && (
@@ -102,7 +102,7 @@ export default function Orders() {
                   <div className={styles.cardFooter}>
                     <div className={styles.totalInfo}>
                       <span className={styles.totalLabel}>Total</span>
-                      <span className={styles.totalValue}>₹{Number(order.total_amount).toLocaleString('en-IN')}</span>
+                      <span className={styles.totalValue}>RM{Number(order.total_amount).toLocaleString('en-IN')}</span>
                     </div>
                     <ChevronRight size={18} className={styles.chevron} />
                   </div>

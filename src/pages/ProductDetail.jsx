@@ -336,7 +336,7 @@ export default function ProductDetail() {
             </div>
 
             <div className={styles.price}>
-              <span className={styles.priceSymbol}>₹</span>
+              <span className={styles.priceSymbol}>RM</span>
               <span className={styles.priceValue}>{product.price?.toLocaleString('en-IN')}</span>
             </div>
 
@@ -374,7 +374,7 @@ export default function ProductDetail() {
               </div>
               <div className={styles.guarantee}>
                 <Package size={16} />
-                <span>Free shipping above ₹999</span>
+                <span>Free shipping above RM999</span>
               </div>
             </div>
           </motion.div>

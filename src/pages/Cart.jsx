@@ -152,7 +152,7 @@ export default function Cart() {
 
                       <div className={styles.itemInfo}>
                         <h3 className={styles.itemName}>{item.product?.product_name}</h3>
-                        <p className={styles.itemPrice}>₹{item.product?.price?.toLocaleString('en-IN')} each</p>
+                        <p className={styles.itemPrice}>RM{item.product?.price?.toLocaleString('en-IN')} each</p>
                       </div>
 
                       <div className={styles.itemControls}>
@@ -167,7 +167,7 @@ export default function Cart() {
                         </div>
 
                         <div className={styles.itemTotal}>
-                          ₹{(item.product?.price * item.quantity)?.toLocaleString('en-IN')}
+                          RM{(item.product?.price * item.quantity)?.toLocaleString('en-IN')}
                         </div>
 
                         <button className={styles.removeBtn} onClick={() => removeItem(item.id)}>
@@ -191,7 +191,7 @@ export default function Cart() {
                 <div className={styles.summaryRows}>
                   <div className={styles.summaryRow}>
                     <span>Subtotal</span>
-                    <span>₹{Number(total).toLocaleString('en-IN')}</span>
+                    <span>RM{Number(total).toLocaleString('en-IN')}</span>
                   </div>
                   <div className={styles.summaryRow}>
                     <span>Shipping</span>
@@ -199,13 +199,13 @@ export default function Cart() {
                   </div>
                   <div className={styles.summaryRow}>
                     <span>Tax</span>
-                    <span>₹0</span>
+                    <span>RM0</span>
                   </div>
                 </div>
 
                 <div className={styles.summaryTotal}>
                   <span>Total</span>
-                  <span className={styles.totalAmount}>₹{Number(total).toLocaleString('en-IN')}</span>
+                  <span className={styles.totalAmount}>RM{Number(total).toLocaleString('en-IN')}</span>
                 </div>
 
                 <button onClick={handleCheckout} className={`btn btn-primary ${styles.checkoutBtn}`}>

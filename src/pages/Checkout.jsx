@@ -337,7 +337,7 @@ export default function Checkout() {
                       </span>
                     </div>
                     <span className={styles.orderItemPrice}>
-                      ₹
+                      RM
                       {(
                         (item.product?.price || 0) * item.quantity
                       ).toLocaleString("en-IN")}
@@ -350,7 +350,7 @@ export default function Checkout() {
             <div className={styles.summaryTotalRow}>
               <span>Total</span>
               <span className={styles.totalAmt}>
-                ₹{Number(total).toLocaleString("en-IN")}
+                RM{Number(total).toLocaleString("en-IN")}
               </span>
             </div>
 

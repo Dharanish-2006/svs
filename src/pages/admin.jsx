@@ -287,7 +287,7 @@ function ProductCreateForm({ onSuccess, onClose, editProduct }) {
         <div className={formStyles.row}>
           <div className={formStyles.field}>
             <label className={formStyles.label}>
-              <DollarSign size={14} /> Price (₹){" "}
+              <DollarSign size={14} /> Price (RM){" "}
               <span className={formStyles.req}>*</span>
             </label>
             <input
@@ -626,7 +626,7 @@ export default function Admin() {
                 New Order #{data.order_id}
               </div>
               <div className={styles.toastSub}>
-                ₹{data.amount} · {data.customer}
+                RM{data.amount} · {data.customer}
               </div>
             </div>
             <button
@@ -799,7 +799,7 @@ export default function Admin() {
                           Order #{n.order_id}
                         </div>
                         <div className={styles.notifSub}>
-                          ₹{n.amount} · {n.customer}
+                          RM{n.amount} · {n.customer}
                         </div>
                         <div className={styles.notifTime}>
                           {new Date(n.ts).toLocaleTimeString("en-IN", {
@@ -900,7 +900,7 @@ export default function Admin() {
             },
             {
               label: "Revenue",
-              value: `₹${stats.revenue.toLocaleString("en-IN")}`,
+              value: `RM${stats.revenue.toLocaleString("en-IN")}`,
               icon: <TrendingUp size={18} />,
               accent: "#10b981",
             },
@@ -1051,11 +1051,11 @@ export default function Admin() {
                               {order.items?.length !== 1 ? "s" : ""}
                             </td>
                             <td className={styles.amount}>
-                              ₹
+                              RM
                               {order.total_amount}
                             </td>
                             <td className={styles.amount}>
-                              ₹
+                              RM
                               {order.address}
                             </td>
                             <td className={styles.muted}>
@@ -1188,7 +1188,7 @@ export default function Admin() {
                         </div>
                       </td>
                       <td className={styles.amount}>
-                        ₹{p.price?.toLocaleString("en-IN")}
+                        RM{p.price?.toLocaleString("en-IN")}
                       </td>
                       <td>
                         <span

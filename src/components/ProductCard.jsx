@@ -48,7 +48,7 @@ export default function ProductCard({ product, onAddToCart, delay = 0, viewMode 
           </Link>
           <p className={styles.listDesc}>{product.description?.slice(0, 80)}…</p>
           <div className={styles.listFooter}>
-            <span className={styles.price}>₹{product.price?.toLocaleString('en-IN')}</span>
+            <span className={styles.price}>RM{product.price?.toLocaleString('en-IN')}</span>
             <button className={`btn btn-primary ${styles.listBtn}`}
               onClick={handleAddToCart} disabled={isOutOfStock}>
               {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
@@ -132,10 +132,10 @@ export default function ProductCard({ product, onAddToCart, delay = 0, viewMode 
         </Link>
 
         <div className={styles.priceRow}>
-          <span className={styles.price}>₹{product.price?.toLocaleString('en-IN')}</span>
+          <span className={styles.price}>RM{product.price?.toLocaleString('en-IN')}</span>
           {product.originalPrice && (
             <span className={styles.originalPrice}>
-              ₹{product.originalPrice.toLocaleString('en-IN')}
+              RM{product.originalPrice.toLocaleString('en-IN')}
             </span>
           )}
         </div>

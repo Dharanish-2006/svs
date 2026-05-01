@@ -184,13 +184,13 @@ export default function CategoryPage() {
               <h3 className={styles.sidebarHead}>Price Range</h3>
               <div className={styles.priceInputs}>
                 <div className={styles.priceField}>
-                  <label className="label">Min ₹</label>
+                  <label className="label">Min RM</label>
                   <input type="number" className="input" style={{ padding: '8px 12px', fontSize: 13 }}
                     value={priceRange[0]}
                     onChange={e => setPriceRange([Number(e.target.value), priceRange[1]])} />
                 </div>
                 <div className={styles.priceField}>
-                  <label className="label">Max ₹</label>
+                  <label className="label">Max RM</label>
                   <input type="number" className="input" style={{ padding: '8px 12px', fontSize: 13 }}
                     value={priceRange[1]}
                     onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])} />
@@ -199,7 +199,7 @@ export default function CategoryPage() {
               <input type="range" min="0" max="10000" value={priceRange[1]}
                 onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
                 className={styles.rangeSlider} />
-              <p className={styles.priceLabel}>Up to ₹{priceRange[1].toLocaleString('en-IN')}</p>
+              <p className={styles.priceLabel}>Up to RM{priceRange[1].toLocaleString('en-IN')}</p>
             </div>
           </aside>
 
@@ -308,7 +308,7 @@ export default function CategoryPage() {
                 <input type="range" min="0" max="10000" value={priceRange[1]}
                   onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
                   className={styles.rangeSlider} />
-                <p className={styles.priceLabel}>₹{priceRange[1].toLocaleString('en-IN')}</p>
+                <p className={styles.priceLabel}>RM{priceRange[1].toLocaleString('en-IN')}</p>
               </div>
               <div style={{ padding: 20 }}>
                 <button className="btn btn-primary" style={{ width: '100%' }}
