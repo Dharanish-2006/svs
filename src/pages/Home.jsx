@@ -361,7 +361,7 @@ export default function Home() {
 
             <div>
               <h4 className={styles.footerHead}>Collections</h4>
-              {CATEGORIES.map(cat => (
+              {categories.map(cat => (
                 <Link key={cat.id} to={`/category/${cat.id}`} className={styles.footerLink}>
                   {cat.label}
                 </Link>
