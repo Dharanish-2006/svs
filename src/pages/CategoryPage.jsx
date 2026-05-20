@@ -64,18 +64,21 @@ export default function CategoryPage() {
   }, [loading, sort, priceRange])
 
   // ── Filter + sort products ─────────────────────────────────────────────────
-  const filtered = [...allProducts]
-    .filter(p => {
-      if (searchQuery) return p.product_name.toLowerCase().includes(searchQuery.toLowerCase())
-      return true
-    })
-    .filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
-    .sort((a, b) => {
-      if (sort === 'price-asc')  return a.price - b.price
-      if (sort === 'price-desc') return b.price - a.price
-      if (sort === 'name-asc')   return a.product_name.localeCompare(b.product_name)
-      return 0
-    })
+const filtered = [...allProducts]
+  .filter(p => {
+    if (searchQuery) {
+      return p.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+    }
+    if (!categoryId || categoryId === 'all') return true
+    return p.category?.slug === categoryId
+  })
+  .filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
+  .sort((a, b) => {
+    if (sort === 'price-asc')  return a.price - b.price
+    if (sort === 'price-desc') return b.price - a.price
+    if (sort === 'name-asc')   return a.product_name.localeCompare(b.product_name)
+    return 0
+  })
 
   const handleAddToCart = async (product) => {
     if (!isAuthenticated) { navigate('/login'); return }
