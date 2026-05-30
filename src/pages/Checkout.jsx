@@ -131,15 +131,41 @@ export default function Checkout() {
       }
 
       // Razorpay
+      // Replace the entire Razorpay section in placeOrder() with this:
+
+      // Razorpay
+      let RazorpayConstructor;
       try {
-        await loadRazorpay();
-      } catch {
-        toast.error("Payment gateway failed to load — please refresh.");
+        RazorpayConstructor = await loadRazorpay();
+      } catch (err) {
+        toast.error(
+          "Payment gateway failed to load. Check your internet connection.",
+        );
         setPlacing(false);
         return;
       }
 
-      const { key, order_id, amount } = await orderService.createRazorpay(form);
+      let razorpayData;
+      try {
+        razorpayData = await orderService.createRazorpay(form);
+      } catch (err) {
+        toast.error(
+          err?.response?.data?.error || "Failed to create payment order",
+        );
+        setPlacing(false);
+        return;
+      }
+
+      // Debug: log what backend returns
+      console.log("Razorpay data from backend:", razorpayData);
+
+      const { key, order_id, amount } = razorpayData;
+
+      if (!key) {
+        toast.error("Payment key missing — contact support");
+        setPlacing(false);
+        return;
+      }
 
       const options = {
         key,
@@ -171,7 +197,7 @@ export default function Checkout() {
         theme: { color: "#6B2737" },
       };
 
-      new RazorpayClass(options).open();
+      new RazorpayConstructor(options).open();
     } catch (err) {
       toast.error(err?.response?.data?.error || "Something went wrong");
       setPlacing(false);
