@@ -6,11 +6,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000/',
+        target: 'https://svs-90l6.onrender.com',
         changeOrigin: true,
       },
       '/orders': {
-        target: 'http://localhost:8000/',
+        target: 'https://svs-90l6.onrender.com',
         changeOrigin: true,
       },
     },
