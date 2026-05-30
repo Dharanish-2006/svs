@@ -131,8 +131,10 @@ export default function Checkout() {
       }
 
       // Razorpay
-      if (typeof window.Razorpay === "undefined") {
-        toast.error("Payment gateway not loaded — please refresh.");
+      try {
+        await loadRazorpay();
+      } catch {
+        toast.error("Payment gateway failed to load — please refresh.");
         setPlacing(false);
         return;
       }
