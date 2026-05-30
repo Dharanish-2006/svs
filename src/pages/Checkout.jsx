@@ -167,7 +167,7 @@ export default function Checkout() {
       const options = {
         key,
         amount,
-        currency: "INR",
+        currency: "RM",
         name: "SVS Collection",
         order_id,
         handler: async (response) => {
