@@ -156,9 +156,6 @@ export default function Checkout() {
         return;
       }
 
-      // Debug: log what backend returns
-      console.log("Razorpay data from backend:", razorpayData);
-
       const { key, order_id, amount } = razorpayData;
 
       if (!key) {
