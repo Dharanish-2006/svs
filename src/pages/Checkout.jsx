@@ -129,10 +129,6 @@ export default function Checkout() {
         }
         return;
       }
-
-      // Razorpay
-      // Replace the entire Razorpay section in placeOrder() with this:
-
       // Razorpay
       let RazorpayConstructor;
       try {

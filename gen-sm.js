@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import { SitemapStream, streamToPromise } from 'sitemap'
 
 const BASE_URL = 'https://www.svscollection.com'
-const API_URL = 'https://svs-90l6.onrender.com/api/products'
+const API_URL = 'https://cartsy-ht0x.onrender.com/api/products'
 
 const outputPath = './public/sitemap.xml'
 
